@@ -14,9 +14,9 @@ Usage: zabbix-cloudwatch
   -h, --help              This Message
   -n, --namespace         Namespace (AWS/Autoscaling, AWS/EC2, etc...)
   -m, --metricname        Metric Name (GroupInServiceInstances,EstimatedCharges, etc...)
-  -d, --dimension-name    Dimension Name (AutoScalingGroupName, etc...)
-  -v, --dimension-value   Dimension Value
-  -t, --monitoring-type   detailed|basic                            Default: basic
+  -d, --dimensions        Dimensions array (f.e.: [{ :name => 'dim1', :value => 'val1'}, { :name => 'dim2', :value => 'val2'}])
+  -t, --monitoring-type   detailed|basic|manual                     Default: basic
+  --seconds-ago           Start collecting data some seconds ago
   -s, --statistic         Minimum|Maximum|Average|Sum|SampleCount   Default: Average
   --aws-access-key        AWS Access Key
   --aws-secret-key        AWS Secret Key
@@ -101,6 +101,20 @@ zabbix-cloudwatch -n AWS/AutoScaling \
                   --aws-secret-key 'YOUR SECRET KEY' \
                   --aws-region 'YOUR AWS REGION'
 ```
+
+### 4. Get billing metrics for 5 hours
+
+```bash
+zabbix-cloudwatch -n AWS/Billing \
+                  -m EstimatedCharges \
+                  --dimensions "[{:name =>'ServiceName',:value =>'AmazonEC2'},{:name =>'LinkedAccount',:value =>'0123456789'},{:name =>'Currency',:value =>'USD'}]" \
+                  --aws-access-key 'YOUR ACCESS KEY' \
+                  --aws-secret-key 'YOUR SECRET KEY' \
+                  --aws-region 'YOUR AWS REGION' \
+                  --monitoring-type 'manual' \
+                  --seconds-ago=18000
+```
+
 ## Order of preference
 
 The order of preference that this gem uses for the region and keys (individually) are:
