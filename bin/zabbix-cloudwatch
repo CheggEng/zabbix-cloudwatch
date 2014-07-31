@@ -13,20 +13,20 @@ end
 @@aws_secret_key=''
 @@aws_region=''
 
+
 opts = Getopt::Long.getopts(
    ["--help"],
    ["--namespace",  Getopt::REQUIRED],
    ["--metricname", Getopt::REQUIRED],
-   ["--dimension-name",  Getopt::REQUIRED],
-   ["--dimension-value","-v",  Getopt::REQUIRED],
-   ["--monitoring-type", "-t", Getopt::REQUIRED],
+   ["--dimensions",  Getopt::REQUIRED],
+   ["--monitoring-type",  Getopt::REQUIRED],
+   ["--seconds-ago", Getopt::OPTIONAL],
    ["--statistic",Getopt::REQUIRED],
    ["--aws-access-key", Getopt::REQUIRED],
    ["--aws-secret-key", Getopt::REQUIRED],
    ["--aws-region", Getopt::REQUIRED],
    ["--version"]
 )
-
 
 def usage
   puts <<EOF
@@ -35,9 +35,9 @@ Usage: #{$0}
   -h, --help              This Message
   -n, --namespace         Namespace (AWS/Autoscaling, AWS/EC2, etc...)
   -m, --metricname        Metric Name (GroupInServiceInstances,EstimatedCharges, etc...)
-  -d, --dimension-name    Dimension Name (AutoScalingGroupName, etc...)
-  -v, --dimension-value   Dimension Value
-  -t, --monitoring-type   detailed|basic                            Default: basic
+  -d, --dimensions        Dimensions array (f.e.: [{ :name => 'dim1', :value => 'val1'}, { :name => 'dim2', :value => 'val2'}])
+  -t, --monitoring-type   detailed|basic|manual                     Default: basic
+  --seconds-ago           Start collecting data some seconds ago
   -s, --statistic         Minimum|Maximum|Average|Sum|SampleCount   Default: Average
   --aws-access-key        AWS Access Key
   --aws-secret-key        AWS Secret Key

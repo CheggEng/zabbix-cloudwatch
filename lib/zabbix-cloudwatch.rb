@@ -19,8 +19,7 @@ module ZabbixCloudwatch
       usage if options.key?"help"
       raise NamespaceArgumentMissingException unless options.key?"namespace"
       raise MetricnameArgumentMissingException unless options.key?"metricname"
-      raise DimensionArgumentMissingException unless options.key?"dimension-name"
-      raise DimensionArgumentMissingException unless options.key?"dimension-value"
+      raise DimensionArgumentMissingException unless options.key?"dimensions"
       self.aws = AWS::CloudWatch.new(get_aws_options).client
     end
 
@@ -49,22 +48,29 @@ module ZabbixCloudwatch
   
     def set_time_range
       unless options.key?"monitoring-type"
-        detailed = false
-      else
-        if options["monitoring-type"] =~ /detailed|basic/
-          detailed = true if options["monitoring-type"] == 'detailed'
-          detailed = false if options["monitoring-type"] == 'basic'
-        else
-          raise MonitoringTypeArgumentException, "Monitoring type must be either 'detailed' or 'basic'. "
-        end
-      end
-      if detailed
-        self.start_time = time_one_minute_ago
-        self.period = 60
-      else
         self.start_time = time_five_minutes_ago
         self.period = 360
+      else
+        if options["monitoring-type"] =~ /detailed|basic|manual/
+
+          case options["monitoring-type"]
+            when "detailed"
+              self.start_time = time_one_minute_ago
+              self.period = 60
+            when "basic"
+              self.start_time = time_five_minutes_ago
+              self.period = 360
+            when "manual"
+              seconds_ago = options["seconds-ago"].to_i
+
+              self.start_time = (Time.now - (seconds_ago+30)).utc.iso8601
+              self.period = 360
+          end            
+        else
+          raise MonitoringTypeArgumentException, "Monitoring type must be either 'detailed', 'basic' or 'manual'. "
+        end
       end
+
       self.end_time = time_now
     end
   
@@ -83,13 +89,15 @@ module ZabbixCloudwatch
     end
   
     def run!
+     # puts options["dimensions"]
+
       test_aws_connectivity
       set_time_range
       set_statistic
       ret = aws.get_metric_statistics({
               :namespace => options["namespace"],
               :metric_name => options["metricname"],
-              :dimensions => [{:name => options["dimension-name"],:value => options["dimension-value"]}],
+              :dimensions => eval(options["dimensions"]),
               :period => period,
               :start_time => start_time,
               :end_time => end_time,
