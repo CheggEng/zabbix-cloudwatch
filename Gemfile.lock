@@ -49,7 +49,7 @@ PLATFORMS
 
 DEPENDENCIES
   coveralls
-  mime-types (~> 1.0)
+  mime-types (~> 2.6.2)
   rake
   rspec
   zabbix-cloudwatch!
