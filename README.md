@@ -3,7 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/zabbix-cloudwatch.png)](http://badge.fury.io/rb/zabbix-cloudwatch)
 [![Code Climate](https://codeclimate.com/github/randywallace/zabbix-cloudwatch.png)](https://codeclimate.com/github/randywallace/zabbix-cloudwatch)
 [![Dependency Status](https://gemnasium.com/randywallace/zabbix-cloudwatch.png)](https://gemnasium.com/randywallace/zabbix-cloudwatch)
-[![Build Status](https://travis-ci.org/randywallace/zabbix-cloudwatch.png?branch=master)](https://travis-ci.org/randywallace/zabbix-cloudwatch)
+[![Build Status](https://travis-ci.org/randywallace/zabbix-cloudwatch.png?branch=master)](https://travis-ci.org/chrisfu/zabbix-cloudwatch)
 [![Coverage Status](https://coveralls.io/repos/randywallace/zabbix-cloudwatch/badge.png)](https://coveralls.io/r/randywallace/zabbix-cloudwatch)
 
 An external script for getting cloudwatch metrics into Zabbix
