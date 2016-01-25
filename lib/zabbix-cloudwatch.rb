@@ -11,9 +11,9 @@ module ZabbixCloudwatch
     class AwsAccessKeyMissingException < StandardError; end
     class AwsSecretKeyMissingException < StandardError; end
     class BadAWSAccessKeysException < StandardError; end
-  
+
     attr_accessor :options, :aws, :start_time, :end_time, :period, :statistic
-  
+
     def initialize options = {}
       self.options = options
       usage if options.key?"help"
@@ -26,14 +26,14 @@ module ZabbixCloudwatch
     def get_aws_options
       raise AwsAccessKeyMissingException unless options.key?"aws-access-key"
       raise AwsSecretKeyMissingException unless options.key?"aws-secret-key"
-      if options.key?("aws-region") && options['aws-region'] != ''
+      if options.key?("aws-region") and options['aws-region'] != ''
         region = options["aws-region"]
       else
         region = 'us-east-1'
       end
       {:access_key_id => options["aws-access-key"], :secret_access_key => options["aws-secret-key"], :region => region}
     end
-  
+
     def set_statistic
       unless options.key?"statistic"
         self.statistic = "Average"
@@ -45,7 +45,7 @@ module ZabbixCloudwatch
         end
       end
     end
-  
+
     def set_time_range
       unless options.key?"monitoring-type"
         self.start_time = time_five_minutes_ago
@@ -65,7 +65,7 @@ module ZabbixCloudwatch
 
               self.start_time = (Time.now - (seconds_ago+30)).utc.iso8601
               self.period = 360
-          end            
+          end
         else
           raise MonitoringTypeArgumentException, "Monitoring type must be either 'detailed', 'basic' or 'manual'. "
         end
@@ -73,21 +73,21 @@ module ZabbixCloudwatch
 
       self.end_time = time_now
     end
-  
+
     def time_now
       Time.now.utc.iso8601
     end
-  
+
     def time_one_minute_ago
-      # Not really 1 minute ago, but adds a bit of buffer for amazon's silliness 
+      # Not really 1 minute ago, but adds a bit of buffer for amazon's silliness
       (Time.now - 90).utc.iso8601
     end
-  
+
     def time_five_minutes_ago
-      # Not really 5 minutes ago, but adds a bit of buffer for amazon's silliness 
+      # Not really 5 minutes ago, but adds a bit of buffer for amazon's silliness
       (Time.now - (60*7+30)).utc.iso8601
     end
-  
+
     def run!
      # puts options["dimensions"]
 
@@ -110,13 +110,13 @@ module ZabbixCloudwatch
         exit 1
       end
     end
-  
+
     def test_aws_connectivity
       begin
         aws.describe_alarms(:max_records => 1)
       rescue
         raise BadAWSAccessKeysException, <<-EOF
-  
+
   You cannot access AWS due to one of the following reasons:
     - The AWS keys provided do not have access to Cloudwatch
     - your server is not synced with NTP
