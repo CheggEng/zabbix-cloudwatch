@@ -33,6 +33,12 @@ Modify these steps to taste (examples given running on the Amazon AMI 2013.03):
 yum install ruby ruby-devel rubygems gcc libxml2-devel libxslt-devel
 gem install bundler zabbix-cloudwatch
 ln -s $(which zabbix-cloudwatch) /var/lib/zabbixsrv/externalscripts/zabbix-cloudwatch
+
+#We've made patches, lets fix the gem we just installed
+gem contents zabbix-cloudwatch
+#replace the bin/zabbix-cloudwatch & lib/zabbix-cloudwatch.rb in the gem files listed above with the local copies
+#I'm not a ruby dev, so I'm not sure how to install this gem from a source dir
+
 ```
 
 ## Examples
