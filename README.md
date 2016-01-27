@@ -46,6 +46,15 @@ zabbix-cloudwatch -n AWS/EC2 \
                   -s Sum
 ```
 
+or
+
+```bash
+zabbix-cloudwatch -n AWS/ELB \
+                  -m HealthyHostCount \
+                  -d LoadBalancerName \ #This is supposed to be a key for a key value filter, below you define the value
+                  -v NGINX #This should be your ELB name
+```
+
 ## Creating the IAM User
 
 The following actions need to be allowed in IAM for this script to work with the keys you provide:
